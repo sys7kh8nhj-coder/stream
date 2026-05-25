@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamVault — Todo el Streaming</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{
+  --gold:#D4A853;--gold2:#F2CC80;--gold3:#8C6A2A;
+  --bg:#050508;--bg2:#0D0D18;--bg3:#141420;
+  --card:#1A1A2C;--card2:#222238;
+  --txt:#F0EDE8;--txt2:#A09D98;--txt3:#606070;
+  --red:#E94560;--purple:#7C6EEB;
+  --green:#2EC486;
+}
+body{background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;font-size:16px;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:'DM Sans',sans-serif;}
+input,select,textarea{font-family:'DM Sans',sans-serif;}
+
+/* NAV */
+#topnav{position:fixed;top:0;left:0;right:0;z-index:500;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 6vw;background:rgba(5,5,8,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(212,168,83,0.15);}
+.logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,#F2CC80,#D4A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.logo b{-webkit-text-fill-color:#E94560;}
+.navlinks{display:flex;gap:28px;}
+.navlinks a{font-size:14px;color:var(--txt2);transition:color .2s;}
+.navlinks a:hover{color:var(--txt);}
+.navcta{display:flex;gap:10px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:9px 22px;border-radius:100px;font-size:14px;font-weight:600;border:none;transition:all .2s;}
+.btn-border{background:transparent;border:1px solid rgba(212,168,83,0.3);color:var(--txt2);}
+.btn-border:hover{border-color:var(--gold);color:var(--gold);}
+.btn-gold{background:linear-gradient(135deg,#F2CC80,#D4A853);color:#0A0800;font-weight:700;}
+.btn-gold:hover{filter:brightness(1.08);transform:scale(1.02);}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 6vw 60px;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(212,168,83,0.13) 0%,transparent 70%);}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:100px;border:1px solid rgba(212,168,83,0.25);background:rgba(212,168,83,0.07);color:var(--gold);font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:2rem;}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+#hero h1{font-family:'Syne',sans-serif;font-size:clamp(3rem,7vw,6.5rem);font-weight:800;line-height:1;letter-spacing:-2px;margin-bottom:1.5rem;}
+#hero h1 span{display:block;background:linear-gradient(135deg,#F2CC80,#D4A853,#E94560);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-p{font-size:clamp(1rem,2vw,1.2rem);color:var(--txt2);max-width:560px;font-weight:300;margin-bottom:2.5rem;line-height:1.7;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:3.5rem;}
+.btn-big{padding:16px 38px;font-size:16px;font-family:'Syne',sans-serif;}
+.btn-big-sec{padding:16px 38px;font-size:16px;font-family:'Syne',sans-serif;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--txt);border-radius:100px;font-weight:600;}
+.btn-big-sec:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.35);}
+
+/* MARQUEE */
+.marquee-box{width:100%;overflow:hidden;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);padding:16px 0;}
+.marquee-inner{display:flex;gap:56px;width:max-content;animation:slide 28s linear infinite;}
+@keyframes slide{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.mbadge{display:flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--txt3);white-space:nowrap;}
+.mdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* STATS */
+#stats{display:flex;padding:56px 6vw;border-bottom:1px solid rgba(255,255,255,0.06);background:var(--bg);}
+.stat{flex:1;text-align:center;padding:0 1rem;}
+.stat+.stat{border-left:1px solid rgba(255,255,255,0.06);}
+.stat-n{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;background:linear-gradient(135deg,#F2CC80,#D4A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-l{font-size:13px;color:var(--txt3);margin-top:4px;}
+
+/* SECTIONS */
+.sec{padding:90px 6vw;background:var(--bg);}
+.sec-alt{padding:90px 6vw;background:var(--bg2);}
+.sec-eye{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:12px;}
+.sec-h{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-1px;margin-bottom:16px;line-height:1.05;}
+.sec-p{font-size:1rem;color:var(--txt2);max-width:520px;font-weight:300;line-height:1.7;margin-bottom:0;}
+.grad-gold{background:linear-gradient(135deg,#F2CC80,#D4A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.grad-red{background:linear-gradient(135deg,#D4A853,#E94560);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.grad-purple{background:linear-gradient(135deg,#7C6EEB,#E94560);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* PLATFORM CARDS */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;margin-top:3rem;}
+.pcard{background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:26px;transition:all .35s ease;position:relative;}
+.pcard:hover{transform:translateY(-5px);border-color:rgba(212,168,83,0.2);background:var(--card2);box-shadow:0 20px 50px rgba(0,0,0,0.5);}
+.pcard-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px;}
+.pcard-name{font-family:'Syne',sans-serif;font-size:19px;font-weight:700;margin-bottom:4px;}
+.pcard-tag{font-size:12px;color:var(--txt3);margin-bottom:12px;}
+.pcard-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.ptag{padding:3px 10px;border-radius:100px;font-size:11px;background:rgba(255,255,255,0.06);color:var(--txt3);border:1px solid rgba(255,255,255,0.06);}
+.pcard-price{display:flex;align-items:baseline;gap:4px;}
+.pcard-price-big{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;}
+.pcard-price-sm{font-size:12px;color:var(--txt3);}
+.pcard-pop{position:absolute;top:16px;right:16px;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+
+/* PAYMENT */
+.paygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:2.5rem;}
+.paycard{background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:20px 14px;text-align:center;transition:all .3s;}
+.paycard:hover{border-color:rgba(212,168,83,0.25);background:var(--card2);transform:translateY(-3px);}
+.paycard-icon{font-size:30px;margin-bottom:8px;}
+.paycard-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:3px;}
+.paycard-desc{font-size:11px;color:var(--txt3);}
+
+/* PLANS */
+.plangrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;margin-top:3rem;}
+.plancard{background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:22px;padding:32px 28px;position:relative;transition:all .3s;}
+.plancard.hot{border-color:var(--gold);background:var(--card2);box-shadow:0 0 0 1px var(--gold),0 30px 60px rgba(0,0,0,0.4);}
+.plan-star{position:absolute;top:-13px;left:50%;transform:translateX(-50%);padding:5px 18px;border-radius:100px;background:linear-gradient(135deg,#F2CC80,#D4A853);color:#0A0800;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.plan-lbl{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.plan-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:6px;}
+.plan-desc{font-size:13px;color:var(--txt3);margin-bottom:1.4rem;line-height:1.6;}
+.plan-price{display:flex;align-items:baseline;gap:2px;margin-bottom:1.4rem;padding-bottom:1.4rem;border-bottom:1px solid rgba(255,255,255,0.07);}
+.plan-price-big{font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;line-height:1;}
+.plan-price-top{font-size:1.1rem;align-self:flex-start;padding-top:8px;color:var(--txt2);}
+.plan-price-per{font-size:13px;color:var(--txt3);margin-left:2px;}
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;}
+.plan-feats li{display:flex;gap:9px;font-size:13px;color:var(--txt2);}
+.plan-feats li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0;}
+.plan-feats li.no{color:var(--txt3);}
+.plan-feats li.no::before{content:'✗';color:var(--txt3);}
+.plan-btn{width:100%;padding:13px;border-radius:100px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;border:none;}
+.plan-btn-g{background:linear-gradient(135deg,#F2CC80,#D4A853);color:#0A0800;}
+.plan-btn-g:hover{filter:brightness(1.08);}
+.plan-btn-o{background:transparent;color:var(--txt);border:1px solid rgba(255,255,255,0.12);}
+.plan-btn-o:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.3);}
+
+/* FEATURES */
+.featgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1px;border:1px solid rgba(255,255,255,0.07);border-radius:22px;overflow:hidden;margin-top:2.5rem;}
+.featcell{padding:32px 28px;background:var(--card);transition:background .3s;}
+.featcell:hover{background:var(--card2);}
+.feat-icon{width:42px;height:42px;border-radius:12px;background:rgba(212,168,83,0.1);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px;}
+.feat-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+.feat-desc{font-size:13px;color:var(--txt3);line-height:1.6;}
+
+/* TESTIMONIALS */
+.testigrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-top:2.5rem;}
+.testicard{background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:26px;}
+.testi-stars{color:var(--gold);font-size:13px;margin-bottom:12px;}
+.testi-txt{font-size:14px;color:var(--txt2);line-height:1.7;margin-bottom:16px;font-style:italic;}
+.testi-au{display:flex;align-items:center;gap:11px;}
+.testi-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.testi-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;}
+.testi-when{font-size:11px;color:var(--txt3);}
+
+/* CTA BAND */
+.ctaband{margin:0 5vw;border-radius:28px;background:var(--bg2);border:1px solid rgba(212,168,83,0.15);padding:70px 50px;text-align:center;position:relative;overflow:hidden;}
+.ctaband::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 50% 0%,rgba(212,168,83,0.1) 0%,transparent 70%);}
+.ctaband h2{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:800;letter-spacing:-1px;margin-bottom:12px;position:relative;}
+.ctaband p{font-size:1rem;color:var(--txt2);max-width:440px;margin:0 auto 2rem;position:relative;}
+.ctaband-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;}
+
+/* FAQ */
+.faq-wrap{max-width:760px;margin:2.5rem auto 0;}
+.faq-item{border-bottom:1px solid rgba(255,255,255,0.06);}
+.faq-q{width:100%;background:transparent;border:none;color:var(--txt);font-family:'Syne',sans-serif;font-size:15px;font-weight:600;text-align:left;padding:18px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.faq-arrow{color:var(--gold);font-size:16px;transition:transform .3s;flex-shrink:0;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;font-size:13px;color:var(--txt3);line-height:1.7;}
+.faq-item.open .faq-a{max-height:200px;padding-bottom:16px;}
+
+/* FOOTER */
+footer{padding:56px 6vw 36px;border-top:1px solid rgba(255,255,255,0.06);background:var(--bg);}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+.foot-logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;background:linear-gradient(135deg,#F2CC80,#D4A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;}
+.foot-desc{font-size:13px;color:var(--txt3);max-width:240px;line-height:1.6;}
+.foot-col-h{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+.foot-links{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.foot-links a{font-size:13px;color:var(--txt3);transition:color .2s;}
+.foot-links a:hover{color:var(--txt);}
+.foot-bot{display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.06);font-size:12px;color:var(--txt3);flex-wrap:wrap;gap:8px;}
+#footcopy{cursor:pointer;}
+
+/* ===== MODALS ===== */
+.overlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.overlay.show{opacity:1;pointer-events:all;}
+.mbox{background:#0D0D18;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:40px 36px;width:100%;max-width:450px;position:relative;animation:mup .3s ease;max-height:90vh;overflow-y:auto;}
+@keyframes mup{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.mclose{position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.07);border:none;color:var(--txt2);font-size:14px;display:flex;align-items:center;justify-content:center;}
+.mclose:hover{background:rgba(255,255,255,0.12);color:var(--txt);}
+.m-logo{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;background:linear-gradient(135deg,#F2CC80,#D4A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-bottom:10px;}
+.m-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;text-align:center;margin-bottom:4px;}
+.m-sub{font-size:13px;color:var(--txt3);text-align:center;margin-bottom:1.5rem;}
+.tabs{display:flex;background:#141420;border:1px solid rgba(255,255,255,0.07);border-radius:100px;padding:4px;margin-bottom:1.5rem;}
+.tab-btn{flex:1;padding:8px;border-radius:100px;border:none;background:transparent;color:var(--txt3);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;}
+.tab-btn.on{background:#222238;color:var(--txt);}
+.fg{margin-bottom:12px;}
+.fl{font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--txt2);margin-bottom:5px;display:block;}
+.fi{width:100%;padding:11px 14px;border-radius:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--txt);font-size:14px;outline:none;transition:border-color .2s;}
+.fi:focus{border-color:var(--gold);}
+.fi::placeholder{color:var(--txt3);}
+.fisel{width:100%;padding:11px 14px;border-radius:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--txt);font-size:14px;outline:none;appearance:none;}
+.fisel option{background:#0D0D18;color:var(--txt);}
+.fsub{width:100%;padding:13px;border-radius:100px;background:linear-gradient(135deg,#F2CC80,#D4A853);color:#0A0800;border:none;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-top:6px;}
+.fsub:hover{filter:brightness(1.08);}
+.divider{display:flex;align-items:center;gap:12px;margin:14px 0;}
+.divider hr{flex:1;border:none;border-top:1px solid rgba(255,255,255,0.08);}
+.divider span{font-size:11px;color:var(--txt3);}
+.soc{width:100%;padding:11px;border-radius:11px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--txt);font-size:13px;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:8px;}
+.soc:hover{background:rgba(255,255,255,0.08);}
+.pay-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;}
+.popt{border:2px solid rgba(255,255,255,0.08);border-radius:11px;padding:10px 6px;text-align:center;background:#141420;}
+.popt:hover,.popt.sel{border-color:var(--gold);background:rgba(212,168,83,0.08);}
+.popt-ico{font-size:20px;margin-bottom:3px;}
+.popt-nm{font-size:10px;font-weight:600;color:var(--txt2);}
+.payextra{margin-top:10px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.merr{font-size:12px;color:#E94560;margin-top:8px;min-height:16px;}
+
+/* CHAT */
+#chatbtn{position:fixed;bottom:26px;right:26px;z-index:800;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#F2CC80,#D4A853);border:none;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(212,168,83,0.4);transition:transform .2s;}
+#chatbtn:hover{transform:scale(1.1);}
+#chatwin{position:fixed;bottom:96px;right:26px;z-index:800;width:340px;max-height:500px;background:#0D0D18;border:1px solid rgba(212,168,83,0.2);border-radius:22px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.6);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;transform:translateY(10px);}
+#chatwin.show{opacity:1;pointer-events:all;transform:translateY(0);}
+.chat-head{padding:16px 18px;background:linear-gradient(135deg,#8C6A2A,#D4A853);display:flex;align-items:center;justify-content:space-between;}
+.chat-av{width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;margin-right:10px;}
+.chat-hname{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#0A0800;}
+.chat-hstat{font-size:10px;color:rgba(10,8,0,0.65);}
+.chat-xbtn{background:transparent;border:none;font-size:16px;color:#0A0800;opacity:.6;}
+.chat-xbtn:hover{opacity:1;}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.cmsg{padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.5;max-width:85%;}
+.cmsg.bot{background:var(--card);color:var(--txt);align-self:flex-start;border-bottom-left-radius:4px;white-space:pre-line;}
+.cmsg.usr{background:linear-gradient(135deg,#8C6A2A,#D4A853);color:#0A0800;align-self:flex-end;border-bottom-right-radius:4px;}
+.chat-opts{padding:10px 14px;display:flex;flex-direction:column;gap:6px;border-top:1px solid rgba(255,255,255,0.06);}
+.copt{padding:8px 13px;border-radius:100px;border:1px solid rgba(212,168,83,0.2);background:transparent;color:var(--txt2);font-size:12px;text-align:left;transition:all .2s;}
+.copt:hover{border-color:var(--gold);color:var(--gold);}
+.chat-input-row{display:flex;gap:8px;padding:10px 12px;border-top:1px solid rgba(255,255,255,0.06);}
+.chat-inp{flex:1;padding:8px 12px;border-radius:100px;background:var(--card);border:1px solid rgba(255,255,255,0.08);color:var(--txt);font-size:13px;outline:none;}
+.chat-inp:focus{border-color:var(--gold);}
+.chat-send{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#F2CC80,#D4A853);border:none;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* ADMIN */
+#adminpanel{display:none;position:fixed;inset:0;z-index:2000;background:#06060E;overflow-y:auto;}
+#adminpanel.show{display:block;}
+.adnav{position:sticky;top:0;z-index:10;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:#06060E;border-bottom:1px solid rgba(212,168,83,0.18);}
+.adlogo{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--gold);}
+.adlogo small{font-size:10px;color:var(--txt3);margin-left:8px;text-transform:uppercase;letter-spacing:1px;}
+.adbody{display:grid;grid-template-columns:210px 1fr;min-height:calc(100vh - 58px);}
+.adside{border-right:1px solid rgba(212,168,83,0.15);padding:1rem 0;}
+.adsec{padding:0 .8rem 1rem;margin-bottom:1rem;border-bottom:1px solid rgba(212,168,83,0.1);}
+.adsec-h{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);font-weight:600;margin-bottom:8px;padding:0 .3rem;}
+.adnb{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:8px;border:none;background:transparent;color:var(--txt2);font-size:13px;font-weight:500;text-align:left;}
+.adnb:hover{background:rgba(212,168,83,0.08);color:var(--txt);}
+.adnb.on{background:rgba(212,168,83,0.12);color:var(--gold);}
+.adcontent{padding:1.6rem;}
+.adtab{display:none;}
+.adtab.on{display:block;}
+.adh{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;margin-bottom:4px;}
+.adsub{font-size:13px;color:var(--txt3);margin-bottom:1.5rem;}
+.adcard{background:#0F0F1C;border:1px solid rgba(212,168,83,0.18);border-radius:13px;padding:18px;margin-bottom:14px;}
+.adcard-h{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:13px;}
+.adlbl{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px;display:block;}
+.adinp{width:100%;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,83,0.15);color:var(--txt);font-size:13px;outline:none;}
+.adinp:focus{border-color:var(--gold);}
+.adta{width:100%;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,83,0.15);color:var(--txt);font-size:13px;outline:none;resize:vertical;min-height:70px;}
+.adta:focus{border-color:var(--gold);}
+.adf{margin-bottom:11px;}
+.adr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.adsave{padding:8px 20px;border-radius:100px;background:linear-gradient(135deg,#F2CC80,#D4A853);color:#0A0800;border:none;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;}
+.adsave:hover{filter:brightness(1.08);}
+.addanger{padding:7px 16px;border-radius:100px;border:1px solid rgba(233,69,96,0.3);background:transparent;color:#E94560;font-size:12px;font-weight:600;}
+.addanger:hover{background:rgba(233,69,96,0.1);}
+.adstats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:16px;}
+.adstat{background:#0F0F1C;border:1px solid rgba(212,168,83,0.15);border-radius:11px;padding:14px;}
+.adstat-n{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--gold);}
+.adstat-l{font-size:11px;color:var(--txt3);margin-top:3px;}
+.bge{display:inline-block;padding:2px 9px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.bge-g{background:rgba(46,196,134,0.12);color:#2EC486;border:1px solid rgba(46,196,134,0.2);}
+.bge-r{background:rgba(233,69,96,0.12);color:#E94560;border:1px solid rgba(233,69,96,0.2);}
+.bge-y{background:rgba(212,168,83,0.12);color:var(--gold);border:1px solid rgba(212,168,83,0.2);}
+.bge-b{background:rgba(124,110,235,0.12);color:#7C6EEB;border:1px solid rgba(124,110,235,0.2);}
+.plt-item{background:#0F0F1C;border:1px solid rgba(212,168,83,0.15);border-radius:11px;padding:12px 16px;margin-bottom:8px;}
+.plt-hdr{display:flex;align-items:center;justify-content:space-between;}
+.plt-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.plt-body{display:none;border-top:1px solid rgba(255,255,255,0.06);padding-top:12px;margin-top:10px;}
+.plt-body.open{display:block;}
+.tog{width:36px;height:19px;border-radius:100px;background:rgba(255,255,255,0.1);position:relative;border:none;transition:background .2s;flex-shrink:0;}
+.tog.on{background:var(--gold);}
+.tog::after{content:'';position:absolute;width:13px;height:13px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s;}
+.tog.on::after{left:20px;}
+.utbl{width:100%;border-collapse:collapse;}
+.utbl th{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);font-weight:600;padding:9px 12px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.06);}
+.utbl td{padding:11px 12px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle;}
+.utbl tr:hover td{background:rgba(255,255,255,0.02);}
+.ubtn{padding:4px 11px;border-radius:100px;border:1px solid rgba(212,168,83,0.2);background:transparent;color:var(--txt2);font-size:11px;font-weight:600;margin-right:4px;}
+.ubtn:hover{border-color:var(--gold);color:var(--gold);}
+.ubtn.del:hover{border-color:#E94560;color:#E94560;}
+.exp-ok{color:#2EC486;font-weight:600;}
+.exp-warn{color:#FF9800;font-weight:600;}
+.exp-bad{color:#E94560;font-weight:600;}
+.alert-box{background:rgba(255,152,0,0.08);border:1px solid rgba(255,152,0,0.25);border-radius:10px;padding:12px 16px;margin-bottom:12px;font-size:13px;display:flex;align-items:flex-start;gap:10px;}
+
+/* ADMIN LOGIN */
+#adminlogin{position:fixed;inset:0;z-index:1800;background:rgba(0,0,0,0.93);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;}
+#adminlogin.show{display:flex;}
+.albox{background:#0F0F1C;border:1px solid rgba(212,168,83,0.2);border-radius:20px;padding:40px 34px;width:100%;max-width:360px;text-align:center;}
+.alico{width:58px;height:58px;border-radius:16px;background:rgba(212,168,83,0.1);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px;}
+.alh{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:4px;}
+.alp{font-size:13px;color:var(--txt3);margin-bottom:1.4rem;}
+.alerr{font-size:12px;color:#E94560;margin-top:8px;min-height:16px;}
+
+/* CHANGE PW */
+#changepwmodal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,0.88);display:none;align-items:center;justify-content:center;}
+#changepwmodal.show{display:flex;}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:12px 22px;border-radius:100px;background:linear-gradient(135deg,#F2CC80,#D4A853);color:#0A0800;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;transform:translateY(80px);transition:transform .3s cubic-bezier(.16,1,.3,1);box-shadow:0 8px 24px rgba(212,168,83,0.35);}
+#toast.show{transform:translateY(0);}
+
+@media(max-width:700px){
+  .navlinks{display:none;}
+  .foot-grid{grid-template-columns:1fr 1fr;}
+  .adbody{grid-template-columns:1fr;}
+  .adstats{grid-template-columns:1fr 1fr;}
+  .adr{grid-template-columns:1fr;}
+  .ctaband{padding:44px 24px;}
+  #stats{flex-wrap:wrap;}
+  .stat+.stat{border-left:none;border-top:1px solid rgba(255,255,255,0.06);}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="topnav">
+  <div class="logo">Stream<b>Vault</b></div>
+  <div class="navlinks">
+    <a href="#plataformas">Plataformas</a>
+    <a href="#pagos">Métodos de Pago</a>
+    <a href="#planes">Planes</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="navcta">
+    <button class="btn btn-border" onclick="openModal('login')">Iniciar Sesión</button>
+    <button class="btn btn-gold" onclick="openModal('register')">Suscribirse</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="pill"><div class="pill-dot"></div>+15 Plataformas Premium</div>
+  <h1>Todo el Streaming<span id="heroH">Sin Límites.</span></h1>
+  <p class="hero-p" id="heroP">Accede a Netflix, Disney+, Prime Video, Max, Hulu, Apple TV+, Paramount+, Peacock y más — todo en un solo lugar.</p>
+  <div class="hero-btns">
+    <button class="btn btn-gold btn-big" onclick="document.getElementById('planes').scrollIntoView({behavior:'smooth'})">Ver Planes →</button>
+    <button class="btn-big-sec" onclick="openModal('register')">Crear Cuenta</button>
+  </div>
+  <div class="marquee-box"><div class="marquee-inner" id="mtrack"></div></div>
+</section>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stat"><div class="stat-n" id="stP">15+</div><div class="stat-l">Plataformas</div></div>
+  <div class="stat"><div class="stat-n" id="stT">500K+</div><div class="stat-l">Títulos</div></div>
+  <div class="stat"><div class="stat-n">4K</div><div class="stat-l">Ultra HD</div></div>
+  <div class="stat"><div class="stat-n" id="stF">$4.99</div><div class="stat-l">Desde al mes</div></div>
+</div>
+
+<!-- PLATAFORMAS -->
+<section class="sec" id="plataformas">
+  <p class="sec-eye">Elige lo que quieres</p>
+  <h2 class="sec-h">Plataformas <span class="grad-red">Disponibles</span></h2>
+  <p class="sec-p" id="platSub">Cada plataforma tiene su propio precio. Paga solo por lo que usas.</p>
+  <div class="pgrid" id="pgrid"></div>
+</section>
+
+<!-- PAGOS -->
+<section class="sec-alt" id="pagos">
+  <p class="sec-eye">Flexible y seguro</p>
+  <h2 class="sec-h">Métodos de <span class="grad-gold">Pago</span></h2>
+  <p class="sec-p">Todos los métodos más populares. SSL 256-bit. Nunca almacenamos datos de tarjetas.</p>
+  <div class="paygrid">
+    <div class="paycard"><div class="paycard-icon">🍎</div><div class="paycard-name">Apple Pay</div><div class="paycard-desc">Face ID instantáneo</div></div>
+    <div class="paycard"><div class="paycard-icon">🟡</div><div class="paycard-name">Google Pay</div><div class="paycard-desc">Rápido en Android</div></div>
+    <div class="paycard"><div class="paycard-icon">🔵</div><div class="paycard-name">PayPal</div><div class="paycard-desc">Sin compartir datos</div></div>
+    <div class="paycard"><div class="paycard-icon">💳</div><div class="paycard-name">Visa / Mastercard</div><div class="paycard-desc">Débito y crédito</div></div>
+    <div class="paycard"><div class="paycard-icon">💳</div><div class="paycard-name">Amex / Discover</div><div class="paycard-desc">Todas las tarjetas</div></div>
+    <div class="paycard"><div class="paycard-icon">₿</div><div class="paycard-name">Bitcoin / Cripto</div><div class="paycard-desc">BTC, ETH, USDT</div></div>
+    <div class="paycard"><div class="paycard-icon">🟠</div><div class="paycard-name">Zelle</div><div class="paycard-desc">Transferencia al instante</div></div>
+    <div class="paycard"><div class="paycard-icon">💚</div><div class="paycard-name">CashApp</div><div class="paycard-desc">Pago digital fácil</div></div>
+  </div>
+  <div style="margin-top:1.8rem;padding:14px 20px;border-radius:12px;background:rgba(212,168,83,0.06);border:1px solid rgba(212,168,83,0.15);display:flex;align-items:center;gap:14px;max-width:560px;">
+    <span style="font-size:22px;">🔒</span>
+    <div><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--gold);">Pago 100% Seguro — SSL 256-bit</div><div style="font-size:12px;color:var(--txt3);">Todos los pagos están encriptados. Tus datos nunca se almacenan en nuestros servidores.</div></div>
+  </div>
+</section>
+
+<!-- PLANES -->
+<section class="sec" id="planes">
+  <p class="sec-eye">Justo y transparente</p>
+  <h2 class="sec-h">Elige tu <span class="grad-gold">Plan</span></h2>
+  <p class="sec-p">Sin contratos. Cancela cuando quieras.</p>
+  <div class="plangrid" id="plangrid"></div>
+</section>
+
+<!-- CARACTERÍSTICAS -->
+<section class="sec-alt">
+  <p class="sec-eye">¿Por qué StreamVault?</p>
+  <h2 class="sec-h">Todo lo que <span class="grad-purple">Mereces</span></h2>
+  <div class="featgrid">
+    <div class="featcell"><div class="feat-icon">🎬</div><div class="feat-title">Un Solo App</div><div class="feat-desc">Todas las plataformas en un lugar. Sin cambiar de app.</div></div>
+    <div class="featcell"><div class="feat-icon">💳</div><div class="feat-title">Un Solo Cobro</div><div class="feat-desc">Sin múltiples cargos en tu tarjeta. Un pago claro al mes.</div></div>
+    <div class="featcell"><div class="feat-icon">📱</div><div class="feat-title">Todos los Dispositivos</div><div class="feat-desc">Smart TV, celular, tablet, PC. Tu contenido donde vayas.</div></div>
+    <div class="featcell"><div class="feat-icon">🔒</div><div class="feat-title">100% Seguro</div><div class="feat-desc">Cuentas originales verificadas. Autenticación 2FA disponible.</div></div>
+    <div class="featcell"><div class="feat-icon">⬇️</div><div class="feat-title">Ver Offline</div><div class="feat-desc">Descarga sin límites y ve sin conexión en el avión o metro.</div></div>
+    <div class="featcell"><div class="feat-icon">🌐</div><div class="feat-title">Contenido Global</div><div class="feat-desc">Anime, k-dramas, cine europeo. Sin restricciones geográficas.</div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="sec">
+  <p class="sec-eye">Clientes felices</p>
+  <h2 class="sec-h">Lo que <span class="grad-gold">Dicen</span></h2>
+  <div class="testigrid">
+    <div class="testicard"><div class="testi-stars">★★★★★</div><p class="testi-txt">"Antes pagaba más de $80 al mes en servicios separados. Ahora pago solo por lo que uso. La mejor decisión."</p><div class="testi-au"><div class="testi-av" style="background:linear-gradient(135deg,#8C6A2A,#D4A853)">MG</div><div><div class="testi-name">María González</div><div class="testi-when">Usuaria desde 2024</div></div></div></div>
+    <div class="testicard"><div class="testi-stars">★★★★★</div><p class="testi-txt">"Mis hijos ven Disney, yo HBO Max, mi esposa anime. Todo en una app. Increíble."</p><div class="testi-au"><div class="testi-av" style="background:linear-gradient(135deg,#E94560,#7C6EEB)">CR</div><div><div class="testi-name">Carlos Reyes</div><div class="testi-when">Usuario desde 2023</div></div></div></div>
+    <div class="testicard"><div class="testi-stars">★★★★★</div><p class="testi-txt">"El bot de soporte resolvió mi problema a medianoche en minutos. Nunca vi algo así."</p><div class="testi-au"><div class="testi-av" style="background:linear-gradient(135deg,#0F6E56,#7C6EEB)">AL</div><div><div class="testi-name">Ana López</div><div class="testi-when">Usuaria desde 2024</div></div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec-alt" style="padding:60px 0;">
+  <div class="ctaband">
+    <h2>¿Listo para Verlo <span class="grad-red">Todo?</span></h2>
+    <p id="ctaP">Elige tus plataformas. Sin compromisos. Cancela cuando quieras.</p>
+    <div class="ctaband-btns">
+      <button class="btn btn-gold btn-big" onclick="openModal('register')">Suscribirse Ahora</button>
+      <button class="btn-big-sec" onclick="document.getElementById('planes').scrollIntoView({behavior:'smooth'})">Ver Planes</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq" style="padding:90px 6vw;">
+  <div style="text-align:center;">
+    <p class="sec-eye">Preguntas Frecuentes</p>
+    <h2 class="sec-h" style="text-align:center;">Todo lo que <span class="grad-gold">Necesitas Saber</span></h2>
+  </div>
+  <div class="faq-wrap" id="faqwrap"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo">StreamVault</div>
+      <p class="foot-desc" id="fdesc">Todo el streaming del mundo. Sin complicaciones, sin múltiples cobros.</p>
+      <div style="display:flex;gap:12px;margin-top:10px;">
+        <a href="#" style="color:var(--txt3);font-size:16px;">𝕏</a>
+        <a href="#" style="color:var(--txt3);font-size:16px;">◎</a>
+        <a href="#" style="color:var(--txt3);font-size:16px;">ⓕ</a>
+      </div>
+    </div>
+    <div><div class="foot-col-h">Producto</div><ul class="foot-links"><li><a href="#plataformas">Plataformas</a></li><li><a href="#pagos">Métodos de Pago</a></li><li><a href="#planes">Planes</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+    <div><div class="foot-col-h">Legal</div><ul class="foot-links"><li><a href="#">Términos</a></li><li><a href="#">Privacidad</a></li><li><a href="#">Cookies</a></li></ul></div>
+    <div><div class="foot-col-h">Soporte</div><ul class="foot-links"><li><a href="#" onclick="toggleChat();return false;">Chat en Vivo</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">Ayuda</a></li></ul></div>
+  </div>
+  <div class="foot-bot">
+    <span id="footcopy">© 2025 StreamVault. Todos los derechos reservados.</span>
+    <span>Netflix, Disney+ y otros son marcas de sus propietarios.</span>
+  </div>
+</footer>
+
+<!-- SUPPORT CHAT -->
+<button id="chatbtn" onclick="toggleChat()">💬</button>
+<div id="chatwin">
+  <div class="chat-head">
+    <div style="display:flex;align-items:center;">
+      <div class="chat-av">🤖</div>
+      <div><div class="chat-hname">StreamBot</div><div class="chat-hstat">● En línea</div></div>
+    </div>
+    <button class="chat-xbtn" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-msgs" id="chatmsgs"></div>
+  <div class="chat-opts" id="chatopts"></div>
+  <div class="chat-input-row">
+    <input class="chat-inp" id="chatinp" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<!-- USER MODAL -->
+<div class="overlay" id="usermodal" onclick="if(event.target===this)closeModal()">
+  <div class="mbox">
+    <button class="mclose" onclick="closeModal()">✕</button>
+    <div class="m-logo">StreamVault</div>
+    <div class="m-title" id="mtitle">Bienvenido</div>
+    <div class="m-sub" id="msub">Inicia sesión en tu cuenta</div>
+    <div class="tabs">
+      <button class="tab-btn on" id="tlogin" onclick="switchTab('login')">Iniciar Sesión</button>
+      <button class="tab-btn" id="treg" onclick="switchTab('register')">Crear Cuenta</button>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div id="lpanel">
+      <button class="soc" onclick="toast('🔗 Conectando con Google...')"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>Continuar con Google</button>
+      <button class="soc" onclick="toast('🍎 Conectando con Apple...')">🍎 Continuar con Apple</button>
+      <div class="divider"><hr><span>o con tu correo</span><hr></div>
+      <div class="fg"><label class="fl">Correo electrónico</label><input class="fi" type="email" id="lemail" placeholder="tu@correo.com"></div>
+      <div class="fg"><label class="fl">Contraseña</label><input class="fi" type="password" id="lpass" placeholder="••••••••"></div>
+      <div style="text-align:right;margin-bottom:10px;"><a href="#" style="font-size:12px;color:var(--gold);">¿Olvidaste tu contraseña?</a></div>
+      <div class="merr" id="lerr"></div>
+      <button class="fsub" onclick="doLogin()">Iniciar Sesión</button>
+    </div>
+
+    <!-- REGISTER PANEL -->
+    <div id="rpanel" style="display:none;">
+      <div class="fg"><label class="fl">Nombre completo</label><input class="fi" id="rname" placeholder="Juan García"></div>
+      <div class="fg"><label class="fl">Correo electrónico</label><input class="fi" type="email" id="remail" placeholder="tu@correo.com"></div>
+      <div class="fg"><label class="fl">Contraseña</label><input class="fi" type="password" id="rpass" placeholder="Mínimo 8 caracteres"></div>
+      <div class="fg">
+        <label class="fl">Plan de suscripción</label>
+        <select class="fisel" id="rplan">
+          <option value="">— Selecciona un plan —</option>
+          <option value="basico|1">Básico — $9.99/mes</option>
+          <option value="premium|1">Premium — $19.99/mes</option>
+          <option value="ultra|1">Ultra — $34.99/mes</option>
+          <option value="3meses|3">Paquete 3 Meses — $54.99</option>
+          <option value="6meses|6">Paquete 6 Meses — $99.99</option>
+          <option value="anual|12">Paquete Anual — $179.99</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="fl">Método de pago</label>
+        <div class="pay-opts" id="payopts">
+          <div class="popt sel" onclick="selPay(this,'Apple Pay')"><div class="popt-ico">🍎</div><div class="popt-nm">Apple Pay</div></div>
+          <div class="popt" onclick="selPay(this,'Google Pay')"><div class="popt-ico">🟡</div><div class="popt-nm">Google Pay</div></div>
+          <div class="popt" onclick="selPay(this,'PayPal')"><div class="popt-ico">🔵</div><div class="popt-nm">PayPal</div></div>
+          <div class="popt" onclick="selPay(this,'Tarjeta')"><div class="popt-ico">💳</div><div class="popt-nm">Tarjeta</div></div>
+          <div class="popt" onclick="selPay(this,'Cripto')"><div class="popt-ico">₿</div><div class="popt-nm">Cripto</div></div>
+          <div class="popt" onclick="selPay(this,'Zelle')"><div class="popt-ico">🟠</div><div class="popt-nm">Zelle</div></div>
+        </div>
+        <div id="payextra"></div>
+      </div>
+      <div style="font-size:11px;color:var(--txt3);margin:10px 0;">Al registrarte aceptas los <a href="#" style="color:var(--gold);">Términos</a> y <a href="#" style="color:var(--gold);">Privacidad</a>.</div>
+      <div class="merr" id="rerr"></div>
+      <button class="fsub" onclick="doRegister()">Crear Cuenta</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PW MODAL -->
+<div id="changepwmodal" onclick="if(event.target===this)closeCPW()">
+  <div class="mbox" style="max-width:390px;">
+    <button class="mclose" onclick="closeCPW()">✕</button>
+    <div class="m-title" style="font-size:1.3rem;">Cambiar Contraseña</div>
+    <div class="m-sub" id="cpwlabel">Usuario: —</div>
+    <div class="fg"><label class="fl">Nueva contraseña</label><input class="fi" type="password" id="cpw1" placeholder="Nueva contraseña"></div>
+    <div class="fg"><label class="fl">Confirmar contraseña</label><input class="fi" type="password" id="cpw2" placeholder="Repite la contraseña"></div>
+    <div class="merr" id="cpwerr"></div>
+    <button class="fsub" onclick="applyCPW()">Guardar Contraseña</button>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="adminlogin" onclick="if(event.target===this)closeAdminLogin()">
+  <div class="albox">
+    <div class="alico">🔐</div>
+    <div class="alh">Panel Admin</div>
+    <p class="alp">Ingresa tus credenciales de administrador.</p>
+    <div class="adf"><label class="adlbl">Usuario</label><input class="adinp" id="auser" placeholder="admin" autocomplete="off"></div>
+    <div class="adf"><label class="adlbl">Contraseña</label><input class="adinp" type="password" id="apass" placeholder="••••••••" onkeydown="if(event.key==='Enter')verifyAdmin()"></div>
+    <div class="alerr" id="aerr"></div>
+    <button class="fsub" style="margin-top:8px;" onclick="verifyAdmin()">Entrar</button>
+    <button style="width:100%;margin-top:8px;padding:10px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--txt2);font-size:13px;" onclick="closeAdminLogin()">Cancelar</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminpanel">
+  <div class="adnav">
+    <div class="adlogo">StreamVault <small>Admin</small></div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-size:12px;color:var(--txt3);">Sesión: <strong style="color:var(--gold)">admin</strong></span>
+      <button style="padding:6px 14px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--txt2);font-size:12px;font-weight:600;" onclick="closeAdmin()">← Volver</button>
+      <button style="padding:6px 14px;border-radius:100px;border:1px solid rgba(233,69,96,0.3);background:transparent;color:#E94560;font-size:12px;font-weight:600;" onclick="logoutAdmin()">Salir</button>
+    </div>
+  </div>
+  <div class="adbody">
+    <div class="adside">
+      <div class="adsec">
+        <div class="adsec-h">General</div>
+        <button class="adnb on" onclick="showATab('dashboard',this)">📊 Dashboard</button>
+        <button class="adnb" onclick="showATab('site',this)">🌐 Sitio</button>
+      </div>
+      <div class="adsec">
+        <div class="adsec-h">Contenido</div>
+        <button class="adnb" onclick="showATab('platforms',this)">📺 Plataformas</button>
+        <button class="adnb" onclick="showATab('plans',this)">💳 Planes</button>
+        <button class="adnb" onclick="showATab('faq',this)">❓ FAQ</button>
+        <button class="adnb" onclick="showATab('texts',this)">✏️ Textos</button>
+      </div>
+      <div class="adsec">
+        <div class="adsec-h">Usuarios</div>
+        <button class="adnb" onclick="showATab('users',this)">👥 Usuarios</button>
+        <button class="adnb" onclick="showATab('expiry',this)">⏰ Vencimientos</button>
+      </div>
+      <div class="adsec">
+        <div class="adsec-h">Config</div>
+        <button class="adnb" onclick="showATab('security',this)">🔐 Seguridad</button>
+      </div>
+    </div>
+    <div class="adcontent">
+
+      <div class="adtab on" id="atab-dashboard">
+        <div class="adh">Dashboard</div><div class="adsub">Resumen del sitio.</div>
+        <div class="adstats" id="adstats"></div>
+        <div id="adalerts"></div>
+        <div class="adcard"><div class="adcard-h">⚡ Acciones Rápidas</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="adsave" onclick="goTab('platforms')">Plataformas</button>
+            <button class="adsave" onclick="goTab('plans')">Planes</button>
+            <button class="adsave" onclick="goTab('users')">Usuarios</button>
+            <button class="adsave" onclick="goTab('expiry')">Vencimientos</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="adtab" id="atab-site">
+        <div class="adh">Info del Sitio</div><div class="adsub">Datos generales.</div>
+        <div class="adcard">
+          <div class="adcard-h">🌐 General</div>
+          <div class="adf"><label class="adlbl">Descripción Footer</label><textarea class="adta" id="sfdesc">Todo el streaming del mundo. Sin complicaciones, sin múltiples cobros.</textarea></div>
+          <div class="adr">
+            <div class="adf"><label class="adlbl">Copyright</label><input class="adinp" id="scopy" value="© 2025 StreamVault. Todos los derechos reservados."></div>
+            <div class="adf"><label class="adlbl">Email Soporte</label><input class="adinp" id="semail" value="soporte@streamvault.com"></div>
+          </div>
+          <button class="adsave" onclick="saveSite()">Guardar</button>
+        </div>
+      </div>
+
+      <div class="adtab" id="atab-platforms">
+        <div class="adh">Plataformas</div><div class="adsub">Edita precio, nombre y visibilidad.</div>
+        <div id="plt-list"></div>
+        <button class="adsave" onclick="savePlats()" style="margin-top:10px;">💾 Guardar Plataformas</button>
+      </div>
+
+      <div class="adtab" id="atab-plans">
+        <div class="adh">Planes</div><div class="adsub">Edita los planes de suscripción.</div>
+        <div id="plan-list"></div>
+        <button class="adsave" onclick="savePlans()" style="margin-top:10px;">💾 Guardar Planes</button>
+      </div>
+
+      <div class="adtab" id="atab-faq">
+        <div class="adh">FAQ</div><div class="adsub">Gestiona preguntas frecuentes.</div>
+        <div id="faq-list"></div>
+        <button class="adsave" onclick="saveFaq()" style="margin-top:12px;">💾 Guardar FAQ</button>
+      </div>
+
+      <div class="adtab" id="atab-texts">
+        <div class="adh">Textos</div><div class="adsub">Edita textos principales.</div>
+        <div class="adcard">
+          <div class="adcard-h">🚀 Hero & Stats</div>
+          <div class="adf"><label class="adlbl">Subtítulo Hero</label><textarea class="adta" id="thero">Accede a Netflix, Disney+, Prime Video, Max, Hulu, Apple TV+, Paramount+, Peacock y más — todo en un solo lugar.</textarea></div>
+          <div class="adr">
+            <div class="adf"><label class="adlbl">Stat Plataformas</label><input class="adinp" id="tstatp" value="15+"></div>
+            <div class="adf"><label class="adlbl">Stat Títulos</label><input class="adinp" id="tstatt" value="500K+"></div>
+          </div>
+        </div>
+        <div class="adcard">
+          <div class="adcard-h">📣 CTA & Secciones</div>
+          <div class="adf"><label class="adlbl">Texto CTA</label><textarea class="adta" id="tcta">Elige tus plataformas. Sin compromisos. Cancela cuando quieras.</textarea></div>
+          <div class="adf"><label class="adlbl">Subtítulo Plataformas</label><textarea class="adta" id="tplat">Cada plataforma tiene su propio precio. Paga solo por lo que usas.</textarea></div>
+        </div>
+        <button class="adsave" onclick="saveTexts()">💾 Guardar Textos</button>
+      </div>
+
+      <div class="adtab" id="atab-users">
+        <div class="adh">Usuarios</div><div class="adsub">Gestiona todos los usuarios registrados.</div>
+        <div class="adcard" style="padding:0;overflow:hidden;">
+          <div style="padding:14px 18px;border-bottom:1px solid rgba(212,168,83,0.15);display:flex;justify-content:space-between;align-items:center;">
+            <div class="adcard-h" style="margin:0;">👥 Usuarios Registrados</div>
+            <button class="adsave" style="font-size:12px;padding:5px 14px;" onclick="addDemoUser()">+ Demo</button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="utbl"><thead><tr><th>#</th><th>Nombre</th><th>Email</th><th>Plan</th><th>Vencimiento</th><th>Pago</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="utbody"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <div class="adtab" id="atab-expiry">
+        <div class="adh">Alertas de Vencimiento</div><div class="adsub">Usuarios cuya suscripción vence pronto o ya venció.</div>
+        <div class="adcard">
+          <div class="adcard-h">⚙️ Configurar Alerta</div>
+          <div style="display:flex;align-items:flex-end;gap:12px;">
+            <div class="adf" style="margin:0;"><label class="adlbl">Avisar con X días antes</label><input class="adinp" type="number" id="adays" value="7" min="1" max="30" style="max-width:90px;"></div>
+            <button class="adsave" onclick="renderExpiry()">Aplicar</button>
+          </div>
+        </div>
+        <div id="exptable"></div>
+      </div>
+
+      <div class="adtab" id="atab-security">
+        <div class="adh">Seguridad</div><div class="adsub">Cambia la contraseña del panel admin.</div>
+        <div class="adcard">
+          <div class="adcard-h">🔐 Cambiar Contraseña Admin</div>
+          <div class="adf"><label class="adlbl">Contraseña Actual</label><input class="adinp" type="password" id="secold" placeholder="Contraseña actual"></div>
+          <div class="adr">
+            <div class="adf"><label class="adlbl">Nueva</label><input class="adinp" type="password" id="secnew1" placeholder="Nueva contraseña"></div>
+            <div class="adf"><label class="adlbl">Confirmar</label><input class="adinp" type="password" id="secnew2" placeholder="Repite"></div>
+          </div>
+          <div class="merr" id="secmsg"></div>
+          <button class="adsave" onclick="changeAdminPW()">Cambiar</button>
+        </div>
+        <div class="adcard" style="border-color:rgba(233,69,96,0.3);">
+          <div class="adcard-h" style="color:#E94560;">⚠️ Zona de Peligro</div>
+          <p style="font-size:13px;color:var(--txt3);margin-bottom:12px;">Restablece todos los datos al estado original. No se puede deshacer.</p>
+          <button class="addanger" onclick="resetAll()">Restablecer Todo</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══ DATA ═══
+const DEF={
+  adminPass:'admin2025',
+  platforms:[
+    {id:1,name:'Netflix',emoji:'🎬',tagline:'La plataforma líder mundial',tags:['Series','Películas','Docs'],price:'15.99',color:'#E50914',visible:true,popular:true,popularLabel:'#1 Mundial'},
+    {id:2,name:'Disney+',emoji:'✨',tagline:'Disney, Marvel, Star Wars & Pixar',tags:['Animación','Familiar'],price:'10.99',color:'#0063E5',visible:true},
+    {id:3,name:'Prime Video',emoji:'📦',tagline:'Amazon Originals + cine clásico',tags:['Originales','Anime'],price:'8.99',color:'#00A8E0',visible:true},
+    {id:4,name:'Max (HBO)',emoji:'🎭',tagline:'HBO + Warner Bros + DC',tags:['Dramas','Cine'],price:'15.99',color:'#4A2FFF',visible:true,popular:true,popularLabel:'Mejor Calidad'},
+    {id:5,name:'Hulu',emoji:'📺',tagline:'Lo mejor de la TV en vivo',tags:['TV Live','Series'],price:'7.99',color:'#1CE783',visible:true},
+    {id:6,name:'Apple TV+',emoji:'🍎',tagline:'Originales premiados por Apple',tags:['Originales','Premios'],price:'9.99',color:'#888888',visible:true},
+    {id:7,name:'Paramount+',emoji:'⛰️',tagline:'CBS, MTV, Nickelodeon & más',tags:['Reality','Familiar'],price:'5.99',color:'#0064FF',visible:true},
+    {id:8,name:'Peacock',emoji:'🦚',tagline:'NBCUniversal y deportes en vivo',tags:['Deportes','NBC'],price:'4.99',color:'#00B2FF',visible:true},
+    {id:9,name:'Crunchyroll',emoji:'🈯',tagline:'El universo completo del anime',tags:['Anime','Manga'],price:'7.99',color:'#F47521',visible:true,popular:true,popularLabel:'Anime #1'},
+    {id:10,name:'Discovery+',emoji:'🔬',tagline:'Naturaleza, ciencia y aventura',tags:['Documentales'],price:'4.99',color:'#E4A220',visible:true},
+    {id:11,name:'MUBI',emoji:'🎞️',tagline:'Cine de arte y festivales',tags:['Arte','Indie'],price:'10.99',color:'#F50057',visible:true},
+    {id:12,name:'ESPN+',emoji:'⚽',tagline:'El mejor deporte del mundo',tags:['Fútbol','NFL','UFC'],price:'9.99',color:'#FF4713',visible:true},
+  ],
+  plans:[
+    {id:1,name:'Básico',headline:'Esencial',desc:'Acceso a las plataformas más populares.',price:'9.99',featured:false,feats:['Netflix Standard','Disney+','Prime Video','3 pantallas simultáneas'],nofeats:['Hulu, Max, Apple TV+','Calidad 4K Ultra HD']},
+    {id:2,name:'Premium',headline:'Lo Mejor de Todo',desc:'El plan favorito. Todo en uno.',price:'19.99',featured:true,feats:['Netflix 4K','Disney+','Hulu, Max, Apple TV+','Calidad 4K Ultra HD','5 pantallas','ESPN+, Paramount+'],nofeats:[]},
+    {id:3,name:'Ultra',headline:'Sin Límites',desc:'Para toda la familia. Acceso total.',price:'34.99',featured:false,feats:['15+ plataformas completas','4K + Dolby Atmos','Pantallas ilimitadas','Soporte 24/7'],nofeats:[]},
+  ],
+  faq:[
+    {q:'¿Cómo accedo a todas las plataformas?',a:'Con tu cuenta StreamVault entras desde nuestra app a todas las plataformas con un clic. Sin cuentas separadas.'},
+    {q:'¿Puedo cancelar en cualquier momento?',a:'Sí. Sin penalidades. Cancela desde tu panel. Tu acceso dura hasta el fin del período pagado.'},
+    {q:'¿El contenido es 100% legal?',a:'Sí. Operamos con suscripciones oficiales. Todo el contenido es legítimo.'},
+    {q:'¿Cuántas personas pueden usar una cuenta?',a:'Básico 3 pantallas, Premium 5, Ultra ilimitadas. Cada miembro tiene su propio perfil.'},
+    {q:'¿Qué métodos de pago aceptan?',a:'Apple Pay, Google Pay, PayPal, Visa, Mastercard, Bitcoin, USDT, Zelle y CashApp.'},
+    {q:'¿Tienen soporte en español?',a:'Sí. Soporte 24/7 en español, inglés y portugués vía chat y WhatsApp.'},
+  ],
+  texts:{hero:'Accede a Netflix, Disney+, Prime Video, Max, Hulu, Apple TV+, Paramount+, Peacock y más — todo en un solo lugar.',statp:'15+',statt:'500K+',cta:'Elige tus plataformas. Sin compromisos. Cancela cuando quieras.',plat:'Cada plataforma tiene su propio precio. Paga solo por lo que usas.'},
+  site:{desc:'Todo el streaming del mundo. Sin complicaciones, sin múltiples cobros.',copy:'© 2025 StreamVault. Todos los derechos reservados.',email:'soporte@streamvault.com'},
+  users:[
+    {id:1,name:'María González',email:'maria@gmail.com',plan:'Premium',pay:'Apple Pay',start:'2024-11-15',months:6,active:true},
+    {id:2,name:'Carlos Reyes',email:'carlos@gmail.com',plan:'Ultra',pay:'PayPal',start:'2024-10-01',months:1,active:true},
+    {id:3,name:'Ana López',email:'ana@gmail.com',plan:'Básico',pay:'Tarjeta',start:'2025-01-10',months:3,active:true},
+    {id:4,name:'Pedro Martínez',email:'pedro@gmail.com',plan:'Premium',pay:'Google Pay',start:'2025-04-20',months:6,active:true},
+  ]
+};
+
+let D;
+try{const s=localStorage.getItem('sv3');D=s?JSON.parse(s):JSON.parse(JSON.stringify(DEF));}catch(e){D=JSON.parse(JSON.stringify(DEF));}
+function save(){try{localStorage.setItem('sv3',JSON.stringify(D));}catch(e){}}
+
+// ═══ RENDER SITE ═══
+function renderSite(){
+  document.getElementById('heroP').textContent=D.texts.hero;
+  document.getElementById('stP').textContent=D.texts.statp;
+  document.getElementById('stT').textContent=D.texts.statt;
+  document.getElementById('ctaP').textContent=D.texts.cta;
+  document.getElementById('platSub').textContent=D.texts.plat;
+  document.getElementById('fdesc').textContent=D.site.desc;
+  document.getElementById('footcopy').textContent=D.site.copy;
+
+  // marquee
+  const mp=[...D.platforms,...D.platforms];
+  document.getElementById('mtrack').innerHTML=mp.map(p=>`<div class="mbadge"><div class="mdot" style="background:${p.color}"></div>${p.name}</div>`).join('');
+
+  // platforms
+  const vis=D.platforms.filter(p=>p.visible);
+  document.getElementById('pgrid').innerHTML=vis.map(p=>`
+    <div class="pcard">
+      ${p.popular?`<div class="pcard-pop" style="background:${p.color}25;color:${p.color};border:1px solid ${p.color}50">${p.popularLabel||'Popular'}</div>`:''}
+      <div class="pcard-icon" style="background:${p.color}25">${p.emoji}</div>
+      <div class="pcard-name">${p.name}</div>
+      <div class="pcard-tag">${p.tagline}</div>
+      <div class="pcard-tags">${(p.tags||[]).map(t=>`<span class="ptag">${t}</span>`).join('')}</div>
+      <div class="pcard-price"><span style="font-size:12px;color:var(--txt3);margin-right:4px;">Precio</span><span class="pcard-price-big" style="color:${p.color}">$${p.price}</span><span class="pcard-price-sm">/mes</span></div>
+    </div>`).join('');
+
+  // min price
+  const prices=vis.map(p=>parseFloat(p.price));
+  if(prices.length)document.getElementById('stF').textContent='$'+Math.min(...prices).toFixed(2);
+
+  // plans
+  document.getElementById('plangrid').innerHTML=D.plans.map(pl=>`
+    <div class="plancard ${pl.featured?'hot':''}">
+      ${pl.featured?'<div class="plan-star">⭐ Más Popular</div>':''}
+      <div class="plan-lbl">${pl.name}</div>
+      <div class="plan-title">${pl.headline}</div>
+      <div class="plan-desc">${pl.desc}</div>
+      <div class="plan-price"><span class="plan-price-top">$</span><span class="plan-price-big">${pl.price.split('.')[0]}</span><span class="plan-price-top" style="font-size:1.3rem">.${(pl.price.split('.')[1]||'00')}</span><span class="plan-price-per">/mes</span></div>
+      <ul class="plan-feats">
+        ${(pl.feats||[]).map(f=>`<li>${f}</li>`).join('')}
+        ${(pl.nofeats||[]).map(f=>`<li class="no">${f}</li>`).join('')}
+      </ul>
+      <button class="plan-btn ${pl.featured?'plan-btn-g':'plan-btn-o'}" onclick="openModal('register')">${pl.featured?'Suscribirse Ahora':'Elegir Plan'}</button>
+    </div>`).join('');
+
+  // faq
+  document.getElementById('faqwrap').innerHTML=D.faq.map(f=>`
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">${f.q}<span class="faq-arrow">▾</span></button>
+      <div class="faq-a">${f.a}</div>
+    </div>`).join('');
+}
+
+// ═══ USER MODAL ═══
+let selPayMethod='Apple Pay';
+function openModal(t){
+  document.getElementById('usermodal').classList.add('show');
+  switchTab(t);
+}
+function closeModal(){document.getElementById('usermodal').classList.remove('show');}
+function switchTab(t){
+  const isL=t==='login';
+  document.getElementById('lpanel').style.display=isL?'block':'none';
+  document.getElementById('rpanel').style.display=isL?'none':'block';
+  document.getElementById('tlogin').classList.toggle('on',isL);
+  document.getElementById('treg').classList.toggle('on',!isL);
+  document.getElementById('mtitle').textContent=isL?'Bienvenido de Vuelta':'Crea tu Cuenta';
+  document.getElementById('msub').textContent=isL?'Inicia sesión en tu cuenta':'Únete a StreamVault hoy';
+  document.getElementById('lerr').textContent='';
+  document.getElementById('rerr').textContent='';
+}
+function selPay(el,method){
+  document.querySelectorAll('.popt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  selPayMethod=method;
+  const ex=document.getElementById('payextra');
+  if(method==='Tarjeta'){
+    ex.innerHTML=`<div class="fg"><label class="fl">Número de Tarjeta</label><input class="fi" placeholder="1234 5678 9012 3456" maxlength="19"></div><div class="row2"><div class="fg"><label class="fl">Vencimiento</label><input class="fi" placeholder="MM/AA"></div><div class="fg"><label class="fl">CVV</label><input class="fi" placeholder="123" maxlength="4"></div></div>`;
+  } else if(method==='PayPal'){
+    ex.innerHTML=`<div class="fg"><label class="fl">Email de PayPal</label><input class="fi" type="email" placeholder="tu@paypal.com"></div>`;
+  } else if(method==='Cripto'){
+    ex.innerHTML=`<div class="fg"><label class="fl">Criptomoneda</label><select class="fisel"><option>Bitcoin (BTC)</option><option>Ethereum (ETH)</option><option>USDT TRC20</option><option>USDT ERC20</option></select></div><div style="background:var(--card);border-radius:10px;padding:10px;font-size:12px;color:var(--txt3);margin-top:6px;">📋 Dirección de billetera se mostrará al confirmar el pedido.</div>`;
+  } else {
+    ex.innerHTML='';
+  }
+}
+function doLogin(){
+  const e=document.getElementById('lemail').value.trim();
+  const p=document.getElementById('lpass').value;
+  if(!e||!p){document.getElementById('lerr').textContent='Completa todos los campos.';return;}
+  closeModal();toast('✅ ¡Bienvenido de vuelta!');
+}
+function doRegister(){
+  const n=document.getElementById('rname').value.trim();
+  const e=document.getElementById('remail').value.trim();
+  const p=document.getElementById('rpass').value;
+  const pl=document.getElementById('rplan').value;
+  if(!n){document.getElementById('rerr').textContent='Ingresa tu nombre.';return;}
+  if(!e){document.getElementById('rerr').textContent='Ingresa tu correo.';return;}
+  if(!p||p.length<6){document.getElementById('rerr').textContent='Contraseña: mínimo 6 caracteres.';return;}
+  if(!pl){document.getElementById('rerr').textContent='Selecciona un plan.';return;}
+  const parts=pl.split('|');
+  const planName=parts[0];const months=parseInt(parts[1])||1;
+  const planLabels={basico:'Básico',premium:'Premium',ultra:'Ultra','3meses':'3 Meses','6meses':'6 Meses',anual:'Anual'};
+  const today=new Date().toISOString().split('T')[0];
+  D.users.push({id:Date.now(),name:n,email:e,plan:planLabels[planName]||planName,pay:selPayMethod,start:today,months,active:true});
+  save();
+  closeModal();
+  toast('🎉 ¡Cuenta creada, '+n+'!');
+}
+
+// ═══ CHAT BOT ═══
+let chatOpen=false;
+const botFlows={
+  start:{msg:'¡Hola! Soy StreamBot 🤖\n¿En qué te puedo ayudar hoy?',opts:['💳 Problema con mi pago','🔑 Olvidé mi contraseña','📺 No puedo ver una plataforma','❌ Quiero cancelar','📦 Cambiar de plan','📞 Hablar con un agente','🔧 Otro problema']},
+  pago:{msg:'¿Qué tipo de problema tienes con el pago?',opts:['🔴 Pago rechazado','💸 Me cobraron de más','🔄 Cambiar método de pago','📅 Ver mi factura','↩ Volver']},
+  pass:{msg:'Para recuperar tu contraseña:\n1. Ve a Iniciar Sesión\n2. Clic en "¿Olvidaste tu contraseña?"\n3. Ingresa tu email\n4. Revisa tu correo\n\n¿Necesitas más ayuda?',opts:['✅ Problema resuelto','📞 Hablar con un agente','↩ Volver al inicio']},
+  plataforma:{msg:'¿Cuál plataforma no puedes acceder?',opts:['🎬 Netflix','✨ Disney+','📦 Prime Video','🎭 Max (HBO)','📺 Otra plataforma','↩ Volver']},
+  cancelar:{msg:'Lamentamos que quieras cancelar.\n\n¿Podemos ofrecerte algo?\n• 1 mes extra sin costo\n• Cambiar a plan más económico',opts:['🎁 Quiero el mes gratis','📦 Bajar de plan','❌ Igual quiero cancelar','↩ Volver']},
+  plan:{msg:'¿Qué deseas hacer con tu plan?',opts:['⬆️ Subir de plan','⬇️ Bajar de plan','📅 Ver suscripción activa','↩ Volver']},
+  agente:{msg:'Conectándote con un agente...\n\nTiempo estimado: 2-5 min.\n\nContacto directo:\n📱 WhatsApp: +1 (555) 123-4567\n✉️ soporte@streamvault.com',opts:['↩ Volver al inicio']},
+  otro:{msg:'Cuéntame tu problema y te ayudo. También puedes escribirlo en el campo de texto abajo.',opts:['📞 Hablar con un agente','↩ Volver al inicio']},
+  resuelto:{msg:'¡Genial! Me alegra haber podido ayudarte 😊\n\n¡Disfruta tu streaming!',opts:['🔙 Nueva consulta']},
+};
+const optMap={'💳 Problema con mi pago':'pago','🔑 Olvidé mi contraseña':'pass','📺 No puedo ver una plataforma':'plataforma','❌ Quiero cancelar':'cancelar','📦 Cambiar de plan':'plan','📞 Hablar con un agente':'agente','🔧 Otro problema':'otro','✅ Problema resuelto':'resuelto','↩ Volver':'start','↩ Volver al inicio':'start','🔙 Nueva consulta':'start','🎬 Netflix':'plataforma_netflix','✨ Disney+':'plataforma_disney','📦 Prime Video':'plataforma_prime','🎭 Max (HBO)':'plataforma_hbo','📺 Otra plataforma':'otro'};
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById('chatwin').classList.toggle('show',chatOpen);
+  if(chatOpen&&document.getElementById('chatmsgs').children.length===0)initChat();
+}
+function initChat(){
+  addMsg('bot',botFlows.start.msg);
+  showOpts(botFlows.start.opts);
+}
+function addMsg(who,txt){
+  const d=document.createElement('div');
+  d.className='cmsg '+who;d.textContent=txt;
+  const m=document.getElementById('chatmsgs');
+  m.appendChild(d);m.scrollTop=m.scrollHeight;
+}
+function showOpts(opts){
+  document.getElementById('chatopts').innerHTML=opts.map(o=>`<button class="copt" onclick="handleOpt('${o.replace(/'/g,"\\'")}')">${o}</button>`).join('');
+}
+function handleOpt(opt){
+  addMsg('usr',opt);
+  document.getElementById('chatopts').innerHTML='';
+  const key=optMap[opt];
+  setTimeout(()=>{
+    if(key&&key.startsWith('plataforma_')){
+      const plat=key.split('_')[1];
+      const platNames={netflix:'Netflix',disney:'Disney+',prime:'Prime Video',hbo:'Max (HBO)'};
+      addMsg('bot',`Entendido. El problema con ${platNames[plat]||'esa plataforma'} puede deberse a:\n• Sesión expirada — cierra y vuelve a abrir\n• Actualiza la app\n• Verifica tu suscripción activa\n\n¿Solucionado?`);
+      showOpts(['✅ Problema resuelto','📞 Hablar con un agente','↩ Volver al inicio']);
+    } else if(key&&botFlows[key]){
+      addMsg('bot',botFlows[key].msg);
+      showOpts(botFlows[key].opts);
+    } else {
+      addMsg('bot','Entendido. Un agente revisará tu caso pronto.');
+      showOpts(['↩ Volver al inicio']);
+    }
+  },500);
+}
+function sendChat(){
+  const inp=document.getElementById('chatinp');
+  const msg=inp.value.trim();
+  if(!msg)return;
+  addMsg('usr',msg);inp.value='';
+  document.getElementById('chatopts').innerHTML='';
+  setTimeout(()=>{
+    const rs=['Entendido, te ayudo en un momento.','Un agente revisará tu consulta pronto.','Para ese caso te recomendamos WhatsApp: +1(555)123-4567.','Procesando tu consulta...'];
+    addMsg('bot',rs[Math.floor(Math.random()*rs.length)]);
+    showOpts(['📞 Hablar con un agente','↩ Volver al inicio']);
+  },700);
+}
+
+// ═══ ADMIN ACCESS ═══
+let ac=0,at=null;
+document.getElementById('footcopy').addEventListener('click',()=>{
+  ac++;if(at)clearTimeout(at);
+  at=setTimeout(()=>ac=0,700);
+  if(ac>=3){ac=0;document.getElementById('adminlogin').classList.add('show');setTimeout(()=>document.getElementById('auser').focus(),100);}
+});
+function closeAdminLogin(){document.getElementById('adminlogin').classList.remove('show');}
+function verifyAdmin(){
+  const u=document.getElementById('auser').value.trim();
+  const p=document.getElementById('apass').value;
+  if(u==='admin'&&p===D.adminPass){
+    closeAdminLogin();
+    document.getElementById('adminpanel').classList.add('show');
+    document.body.style.overflow='hidden';
+    renderAdmin();
+  } else {
+    document.getElementById('aerr').textContent='❌ Usuario o contraseña incorrectos.';
+    document.getElementById('apass').value='';
+  }
+}
+function closeAdmin(){document.getElementById('adminpanel').classList.remove('show');document.body.style.overflow='';renderSite();}
+function logoutAdmin(){document.getElementById('adminpanel').classList.remove('show');document.body.style.overflow='';}
+function showATab(name,btn){
+  document.querySelectorAll('.adtab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('atab-'+name).classList.add('on');
+  document.querySelectorAll('.adnb').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+}
+function goTab(name){
+  document.querySelectorAll('.adtab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('atab-'+name).classList.add('on');
+}
+function renderAdmin(){renderDash();renderPlatList();renderPlanList();renderFaqList();loadTexts();loadSite();renderUsers();renderExpiry();}
+
+// DASHBOARD
+function daysLeft(u){
+  const e=new Date(u.start);e.setMonth(e.getMonth()+u.months);
+  return Math.ceil((e-new Date())/(864e5));
+}
+function expiryBadge(u){
+  const d=daysLeft(u);
+  if(d<0)return`<span class="exp-bad">Venció hace ${Math.abs(d)}d</span>`;
+  if(d<=7)return`<span class="exp-warn">⚠️ Vence en ${d}d</span>`;
+  return`<span class="exp-ok">${d}d restantes</span>`;
+}
+function expDate(u){const e=new Date(u.start);e.setMonth(e.getMonth()+u.months);return e.toLocaleDateString('es-ES');}
+function renderDash(){
+  const vis=D.platforms.filter(p=>p.visible).length;
+  const warn=D.users.filter(u=>{const d=daysLeft(u);return d>=0&&d<=7;}).length;
+  const exp=D.users.filter(u=>daysLeft(u)<0).length;
+  document.getElementById('adstats').innerHTML=`
+    <div class="adstat"><div class="adstat-n">${D.users.length}</div><div class="adstat-l">Usuarios totales</div></div>
+    <div class="adstat"><div class="adstat-n">${vis}</div><div class="adstat-l">Plataformas visibles</div></div>
+    <div class="adstat"><div class="adstat-n" style="color:${warn?'#FF9800':'#2EC486'}">${warn}</div><div class="adstat-l">Vencen en ≤7 días</div></div>
+    <div class="adstat"><div class="adstat-n" style="color:${exp?'#E94560':'#2EC486'}">${exp}</div><div class="adstat-l">Vencidas</div></div>
+  `;
+  let al='';
+  const expU=D.users.filter(u=>daysLeft(u)<0);
+  const warnU=D.users.filter(u=>{const d=daysLeft(u);return d>=0&&d<=7;});
+  if(expU.length)al+=`<div class="alert-box">🚨 <div><strong style="color:#E94560;">${expU.length} suscripción(es) vencida(s):</strong> ${expU.map(u=>u.name).join(', ')}</div></div>`;
+  if(warnU.length)al+=`<div class="alert-box">⚠️ <div><strong style="color:#FF9800;">${warnU.length} vencen pronto:</strong> ${warnU.map(u=>u.name+' ('+daysLeft(u)+'d)').join(', ')}</div></div>`;
+  document.getElementById('adalerts').innerHTML=al;
+}
+
+// PLATFORMS
+function renderPlatList(){
+  document.getElementById('plt-list').innerHTML=D.platforms.map((p,i)=>`
+    <div class="plt-item">
+      <div class="plt-hdr" onclick="document.getElementById('pb${i}').classList.toggle('open')">
+        <div class="plt-name">${p.emoji} ${p.name} <span class="bge ${p.visible?'bge-g':'bge-r'}">${p.visible?'Visible':'Oculta'}</span></div>
+        <div style="display:flex;align-items:center;gap:10px;"><strong style="font-family:'Syne',sans-serif;color:var(--gold);">$${p.price}/mes</strong><span style="color:var(--txt3);">▾</span></div>
+      </div>
+      <div class="plt-body" id="pb${i}">
+        <div class="adr">
+          <div class="adf"><label class="adlbl">Nombre</label><input class="adinp" id="pn${i}" value="${p.name}"></div>
+          <div class="adf"><label class="adlbl">Emoji</label><input class="adinp" id="pe${i}" value="${p.emoji}" style="font-size:18px;"></div>
+        </div>
+        <div class="adf"><label class="adlbl">Descripción</label><input class="adinp" id="pt${i}" value="${p.tagline}"></div>
+        <div class="adr">
+          <div class="adf"><label class="adlbl">Precio $/mes</label><input class="adinp" type="number" id="pp${i}" value="${p.price}" step="0.01" min="0"></div>
+          <div class="adf"><label class="adlbl">Color</label><input class="adinp" type="color" id="pc${i}" value="${p.color}" style="height:38px;padding:3px;cursor:pointer;"></div>
+        </div>
+        <div class="adf"><label class="adlbl">Etiquetas (separadas por coma)</label><input class="adinp" id="ptg${i}" value="${(p.tags||[]).join(',')}"></div>
+        <div class="adf"><label class="adlbl">Badge Popular (vacío = no mostrar)</label><input class="adinp" id="ppl${i}" value="${p.popularLabel||''}"></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+          <label class="adlbl" style="margin:0;">Visible:</label>
+          <button class="tog ${p.visible?'on':''}" id="ptog${i}" onclick="D.platforms[${i}].visible=!D.platforms[${i}].visible;this.classList.toggle('on')"></button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function savePlats(){
+  D.platforms.forEach((p,i)=>{
+    p.name=document.getElementById('pn'+i).value||p.name;
+    p.emoji=document.getElementById('pe'+i).value||p.emoji;
+    p.tagline=document.getElementById('pt'+i).value||p.tagline;
+    p.price=parseFloat(document.getElementById('pp'+i).value||p.price).toFixed(2);
+    p.color=document.getElementById('pc'+i).value||p.color;
+    p.tags=document.getElementById('ptg'+i).value.split(',').map(t=>t.trim()).filter(Boolean);
+    const pl=document.getElementById('ppl'+i).value.trim();
+    p.popular=pl.length>0;p.popularLabel=pl;
+  });
+  save();renderPlatList();renderDash();toast('✅ Plataformas guardadas');
+}
+
+// PLANS
+function renderPlanList(){
+  document.getElementById('plan-list').innerHTML=D.plans.map((pl,i)=>`
+    <div class="adcard">
+      <div class="adcard-h" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>${pl.featured?'⭐ ':''}Plan ${pl.name}</span>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" id="plf${i}" ${pl.featured?'checked':''} onchange="D.plans.forEach((p,j)=>p.featured=j===${i});renderPlanList()"> Popular</label>
+      </div>
+      <div class="adr">
+        <div class="adf"><label class="adlbl">Nombre</label><input class="adinp" id="pln${i}" value="${pl.name}"></div>
+        <div class="adf"><label class="adlbl">Titular</label><input class="adinp" id="plh${i}" value="${pl.headline}"></div>
+      </div>
+      <div class="adf"><label class="adlbl">Descripción</label><textarea class="adta" id="pld${i}">${pl.desc}</textarea></div>
+      <div class="adf"><label class="adlbl">Precio $/mes</label><input class="adinp" type="number" id="plp${i}" value="${pl.price}" step="0.01" min="0" style="max-width:130px;"></div>
+      <div class="adr">
+        <div class="adf"><label class="adlbl">Beneficios (uno por línea)</label><textarea class="adta" id="plf2${i}" style="min-height:100px;">${(pl.feats||[]).join('\n')}</textarea></div>
+        <div class="adf"><label class="adlbl">No incluidos (uno por línea)</label><textarea class="adta" id="plno${i}" style="min-height:100px;">${(pl.nofeats||[]).join('\n')}</textarea></div>
+      </div>
+    </div>`).join('');
+}
+function savePlans(){
+  D.plans.forEach((pl,i)=>{
+    pl.name=document.getElementById('pln'+i).value||pl.name;
+    pl.headline=document.getElementById('plh'+i).value||pl.headline;
+    pl.desc=document.getElementById('pld'+i).value||pl.desc;
+    pl.price=parseFloat(document.getElementById('plp'+i).value||pl.price).toFixed(2);
+    pl.feats=document.getElementById('plf2'+i).value.split('\n').map(s=>s.trim()).filter(Boolean);
+    pl.nofeats=document.getElementById('plno'+i).value.split('\n').map(s=>s.trim()).filter(Boolean);
+  });
+  save();toast('✅ Planes guardados');
+}
+
+// FAQ
+function renderFaqList(){
+  const c=document.getElementById('faq-list');
+  c.innerHTML=D.faq.map((f,i)=>`
+    <div class="adcard" style="padding:14px 16px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div class="adcard-h" style="margin:0;">Pregunta ${i+1}</div>
+        <button class="addanger" onclick="D.faq.splice(${i},1);renderFaqList()">Eliminar</button>
+      </div>
+      <div class="adf"><label class="adlbl">Pregunta</label><input class="adinp" id="fq${i}" value="${f.q}"></div>
+      <div class="adf"><label class="adlbl">Respuesta</label><textarea class="adta" id="fa${i}">${f.a}</textarea></div>
+    </div>`).join('');
+  const btn=document.createElement('button');
+  btn.className='adsave';btn.textContent='+ Agregar Pregunta';
+  btn.onclick=()=>{D.faq.push({q:'Nueva pregunta',a:'Respuesta...'});renderFaqList();};
+  c.appendChild(btn);
+}
+function saveFaq(){
+  D.faq=D.faq.map((_,i)=>({q:document.getElementById('fq'+i).value,a:document.getElementById('fa'+i).value}));
+  save();toast('✅ FAQ guardado');
+}
+
+// TEXTS
+function loadTexts(){
+  document.getElementById('thero').value=D.texts.hero;
+  document.getElementById('tstatp').value=D.texts.statp;
+  document.getElementById('tstatt').value=D.texts.statt;
+  document.getElementById('tcta').value=D.texts.cta;
+  document.getElementById('tplat').value=D.texts.plat;
+}
+function saveTexts(){
+  D.texts.hero=document.getElementById('thero').value;
+  D.texts.statp=document.getElementById('tstatp').value;
+  D.texts.statt=document.getElementById('tstatt').value;
+  D.texts.cta=document.getElementById('tcta').value;
+  D.texts.plat=document.getElementById('tplat').value;
+  save();toast('✅ Textos guardados');
+}
+
+// SITE
+function loadSite(){
+  document.getElementById('sfdesc').value=D.site.desc;
+  document.getElementById('scopy').value=D.site.copy;
+  document.getElementById('semail').value=D.site.email;
+}
+function saveSite(){
+  D.site.desc=document.getElementById('sfdesc').value;
+  D.site.copy=document.getElementById('scopy').value;
+  D.site.email=document.getElementById('semail').value;
+  save();toast('✅ Sitio guardado');
+}
+
+// USERS
+let cpwId=null;
+function renderUsers(){
+  document.getElementById('utbody').innerHTML=D.users.map((u,i)=>`
+    <tr>
+      <td style="color:var(--txt3)">${i+1}</td>
+      <td><strong>${u.name}</strong></td>
+      <td style="font-size:12px;color:var(--txt2)">${u.email}</td>
+      <td><span class="bge ${u.plan==='Ultra'?'bge-b':u.plan.includes('Premium')||u.plan.includes('6')||u.plan.includes('Anual')?'bge-y':'bge-g'}">${u.plan}</span></td>
+      <td>${expiryBadge(u)}<br><span style="font-size:11px;color:var(--txt3)">${expDate(u)}</span></td>
+      <td style="font-size:12px;color:var(--txt3)">${u.pay||'—'}</td>
+      <td><span class="bge ${u.active?'bge-g':'bge-r'}">${u.active?'Activo':'Inactivo'}</span></td>
+      <td>
+        <button class="ubtn" onclick="openCPW(${u.id},'${u.name.replace(/'/g,"\\'")}')">🔑 Contraseña</button>
+        <button class="ubtn" onclick="toggleUser(${u.id})">${u.active?'Desactivar':'Activar'}</button>
+        <button class="ubtn del" onclick="deleteUser(${u.id})">🗑</button>
+      </td>
+    </tr>`).join('')||'<tr><td colspan="8" style="text-align:center;padding:26px;color:var(--txt3);">No hay usuarios aún.</td></tr>';
+}
+function toggleUser(id){const u=D.users.find(u=>u.id===id);if(u){u.active=!u.active;save();renderUsers();renderDash();toast('✅ Estado actualizado');}}
+function deleteUser(id){if(!confirm('¿Eliminar este usuario?'))return;D.users=D.users.filter(u=>u.id!==id);save();renderUsers();renderDash();toast('🗑 Usuario eliminado');}
+function addDemoUser(){
+  const ns=['Roberto Silva','Laura Jiménez','Miguel Torres','Sofía Herrera','Daniel Castro'];
+  const ps=['Básico','Premium','Ultra'];
+  const ms=[1,3,6,12];
+  const pays=['PayPal','Apple Pay','Tarjeta','Google Pay','Zelle'];
+  const m=ms[Math.floor(Math.random()*4)];
+  const s=new Date();s.setDate(s.getDate()-Math.floor(Math.random()*50));
+  D.users.push({id:Date.now(),name:ns[Math.floor(Math.random()*5)],email:'demo'+Date.now()+'@test.com',plan:ps[Math.floor(Math.random()*3)],pay:pays[Math.floor(Math.random()*5)],start:s.toISOString().split('T')[0],months:m,active:true});
+  save();renderUsers();renderDash();toast('✅ Usuario demo agregado');
+}
+function openCPW(id,name){
+  cpwId=id;
+  document.getElementById('cpwlabel').textContent='Usuario: '+name;
+  document.getElementById('cpw1').value='';document.getElementById('cpw2').value='';
+  document.getElementById('cpwerr').textContent='';
+  document.getElementById('changepwmodal').classList.add('show');
+}
+function closeCPW(){document.getElementById('changepwmodal').classList.remove('show');cpwId=null;}
+function applyCPW(){
+  const p1=document.getElementById('cpw1').value;
+  const p2=document.getElementById('cpw2').value;
+  if(p1.length<6){document.getElementById('cpwerr').textContent='Mínimo 6 caracteres.';return;}
+  if(p1!==p2){document.getElementById('cpwerr').textContent='Las contraseñas no coinciden.';return;}
+  toast('✅ Contraseña actualizada');
+  setTimeout(closeCPW,800);
+}
+
+// EXPIRY
+function renderExpiry(){
+  const days=parseInt(document.getElementById('adays').value)||7;
+  const list=D.users.filter(u=>daysLeft(u)<=days).sort((a,b)=>daysLeft(a)-daysLeft(b));
+  const el=document.getElementById('exptable');
+  if(!list.length){el.innerHTML=`<div class="adcard" style="text-align:center;padding:26px;color:var(--txt3);">✅ No hay vencimientos en los próximos ${days} días.</div>`;return;}
+  el.innerHTML=`<div class="adcard" style="padding:0;overflow:hidden;">
+    <div style="padding:12px 16px;border-bottom:1px solid rgba(212,168,83,0.15);"><div class="adcard-h" style="margin:0;">⏰ ${list.length} usuario(s) para atender</div></div>
+    <div style="overflow-x:auto;"><table class="utbl"><thead><tr><th>Usuario</th><th>Plan</th><th>Vence</th><th>Estado</th><th>Acción</th></tr></thead><tbody>
+    ${list.map(u=>`<tr>
+      <td><strong>${u.name}</strong><br><span style="font-size:11px;color:var(--txt3)">${u.email}</span></td>
+      <td><span class="bge bge-y">${u.plan}</span></td>
+      <td>${expiryBadge(u)}</td>
+      <td>${daysLeft(u)<0?'<span class="bge bge-r">VENCIDO</span>':'<span class="bge bge-y">PRÓXIMO</span>'}</td>
+      <td>
+        <button class="ubtn" onclick="alert('📧 Notificación enviada a ${u.email}')">📧 Notificar</button>
+        <button class="ubtn" onclick="renewUser(${u.id})">🔄 Renovar</button>
+      </td>
+    </tr>`).join('')}
+    </tbody></table></div></div>`;
+}
+function renewUser(id){
+  const u=D.users.find(u=>u.id===id);if(!u)return;
+  u.start=new Date().toISOString().split('T')[0];
+  save();renderUsers();renderExpiry();renderDash();toast('🔄 Renovado: '+u.name);
+}
+
+// SECURITY
+function changeAdminPW(){
+  const o=document.getElementById('secold').value;
+  const n1=document.getElementById('secnew1').value;
+  const n2=document.getElementById('secnew2').value;
+  const m=document.getElementById('secmsg');
+  if(o!==D.adminPass){m.textContent='❌ Contraseña actual incorrecta.';return;}
+  if(n1.length<6){m.textContent='❌ Mínimo 6 caracteres.';return;}
+  if(n1!==n2){m.textContent='❌ No coinciden.';return;}
+  D.adminPass=n1;save();m.style.color='#2EC486';m.textContent='✅ Contraseña cambiada.';
+  document.getElementById('secold').value='';document.getElementById('secnew1').value='';document.getElementById('secnew2').value='';
+}
+function resetAll(){
+  if(!confirm('⚠️ ¿Restablecer TODO al estado original? No se puede deshacer.'))return;
+  D=JSON.parse(JSON.stringify(DEF));save();renderAdmin();toast('🔄 Datos restablecidos');
+}
+
+// TOAST
+let tt=null;
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  if(tt)clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// KEYBOARD
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeModal();
+    closeAdminLogin();
+    closeCPW();
+  }
+});
+
+// INIT
+renderSite();
+</script>
+</body>
+</html>
